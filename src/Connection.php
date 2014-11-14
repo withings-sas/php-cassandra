@@ -172,12 +172,11 @@ class Connection {
 		$response = new $responseClass($header, $body);
 		
 		if ($header['stream'] !== 0){
-			if (isset($this->_statements[$header['stream']])){
+			if (isset($this->_statements[$header['stream']])) {
 				$this->_statements[$header['stream']]->setResponse($response);
 				unset($this->_statements[$header['stream']]);
 				$this->_recycledStreams->enqueue($header['stream']);
-			}
-			elseif ($response instanceof Response\Event){
+			} elseif ($response instanceof Response\Event) {
 				$this->trigger($response);
 			}
 		}

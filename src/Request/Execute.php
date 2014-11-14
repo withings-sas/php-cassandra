@@ -54,7 +54,7 @@ class Execute extends Request{
 	public function __construct($queryId, array $values, $consistency = null, $options = array()) {
 		$this->_queryId = $queryId;
 		$this->_values = $values;
-		 
+
 		$this->_consistency = $consistency === null ? Request::CONSISTENCY_QUORUM : $consistency;
 		$this->_options = $options;
 	}

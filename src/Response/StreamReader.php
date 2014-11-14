@@ -3,7 +3,7 @@ namespace Cassandra\Response;
 
 use Cassandra\Type;
 
-trait StreamReader {
+class StreamReader {
 
 	/**
 	 * @var string
@@ -152,7 +152,8 @@ trait StreamReader {
 	 * @return float
 	 */
 	public function readFloat() {
-		return unpack('f', strrev($this->read(4)))[1];
+		$data = unpack('f', strrev($this->read(4)));
+		return $data[1];
 	}
 
 	/**
@@ -161,7 +162,8 @@ trait StreamReader {
 	 * @return double
 	 */
 	public function readDouble() {
-		return unpack('d', strrev($this->read(8)))[1];
+		$data = unpack('d', strrev($this->read(8)));
+		return $data[1];
 	}
 
 	/**
@@ -227,7 +229,8 @@ trait StreamReader {
 	 * @return mixed
 	 */
 	public function readBytesAndConvertToType($type){
-		$length = unpack('N', substr($this->data, $this->offset, 4))[1];
+		$unpacked = unpack('N', substr($this->data, $this->offset, 4));
+		$length = $unpacked[1];
 		$this->offset += 4;
 
 		if ($length === 0xffffffff)
@@ -254,10 +257,12 @@ trait StreamReader {
 				$unpacked = unpack('N2', $data);
 				return $unpacked[1] << 32 | $unpacked[2];
 			case Type\Base::BLOB:
-				$length = unpack('N', substr($data, 0, 4))[1];
+				$unpacked = unpack('N', substr($data, 0, 4));
+				$length = $unpacked[1];
 				return substr($data, 4, $length);
 			case Type\Base::BOOLEAN:
-				return (bool) unpack('C', $data)[1];
+				$unpacked = unpack('C', $data);
+				return (bool) $unpacked[1];
 			case Type\Base::DECIMAL:
 				$unpacked = unpack('N1scale/C*', $data);
 				$valueByteLen = $length - 4;
@@ -269,11 +274,14 @@ trait StreamReader {
 				$valueIntLen = strlen($value) - $unpacked['scale'];
 				return (double)(substr($value, 0, $valueIntLen) . '.' . substr($value, $valueIntLen));
 			case Type\Base::DOUBLE:
-				return unpack('d', strrev($data))[1];
+				$unpacked = unpack('d', strrev($data));
+				return $unpacked[1];
 			case Type\Base::FLOAT:
-				return unpack('f', strrev($data))[1];
+				$unpacked = unpack('f', strrev($data));
+				return $unpacked[1];
 			case Type\Base::INT:
-				return unpack('N', $data)[1] << 32 >> 32;
+				$unpacked = unpack('N', $data);
+				return $unpacked[1] << 32 >> 32;
 			case Type\Base::UUID:
 			case Type\Base::TIMEUUID:
 				$uuid = '';
@@ -304,7 +312,8 @@ trait StreamReader {
 							throw new Exception('Unsupported Type Tuple.');
 						case Type\Base::CUSTOM:
 						default:
-							$length = unpack('N', substr($data, 0, 4))[1];
+							$unpacked = unpack('N', substr($data, 0, 4));
+							$length = $unpacked[1];
 							return substr($data, 4, $length);
 					}
 				}

@@ -2,10 +2,7 @@
 namespace Cassandra\Response;
 use Cassandra\Protocol\Frame;
 
-class DataStream {
-	
-	use StreamReader;
-
+class DataStream extends StreamReader {
 	/**
 	 * @param string $binary
 	 */

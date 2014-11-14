@@ -30,13 +30,11 @@ class Node {
 			$pos = strpos($options, ':');
 			if ($pos === false) {
 				$this->_options['host'] = $options;
-			}
-			else{
+			} else{
 				$this->_options['host'] = substr($options, 0, $pos);
 				$this->_options['port'] = (int) substr($options, $pos + 1);
 			}
-		}
-		else{
+		} else {
 			if (isset($options['socket'])) {
 				$options['socket'] += $this->_options['socket'];
 			}

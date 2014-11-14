@@ -100,20 +100,15 @@ class Request implements Frame{
 		foreach($values as $name => $value) {
 			if ($value instanceof Type\Base){
 				$binary = $value->getBinary();
-			}
-			elseif ($value === null){
+			} elseif ($value === null){
 				$binary = null;
-			}
-			elseif (is_int($value)){
+			} elseif (is_int($value)){
 				$binary = pack('N', $value);
-			}
-			elseif (is_string($value)){
+			} elseif (is_string($value)){
 				$binary = $value;
-			}
-			elseif (is_bool($value)){
+			} elseif (is_bool($value)){
 				$binary = $value ? chr(1) : chr(0);
-			}
-			else{
+			} else{
 				throw new Exception('Unknown type.');
 			}
 			
@@ -142,11 +137,9 @@ class Request implements Frame{
 			
 			if (!isset($values[$key])){
 				$strictTypeValues[$key] = null;
-			}
-			elseif($values[$key] instanceof Type\Base){
+			} elseif($values[$key] instanceof Type\Base){
 				$strictTypeValues[$key] = $values[$key];
-			}
-			else{
+			} else{
 				$strictTypeValues[$key] = Type\Base::getTypeObject($column['type'], $values[$key]);
 			}
 		}

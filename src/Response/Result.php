@@ -69,8 +69,8 @@ class Result extends Response {
 	 * @return int|array
 	 */
 	protected function readType(){
-		$data = unpack('n', $this->read(2));
-		$type = $data[1];
+		$unpacked = unpack('n', $this->read(2));
+		$type = $unpacked[1];
 		switch ($type) {
 			case Type\Base::CUSTOM:
 				return array(
@@ -119,8 +119,8 @@ class Result extends Response {
 
 	public function getKind(){
 		if ($this->_kind === null) {
-			$data = unpack('N', substr($this->data, 0, 4));
-			$this->_kind = $data[1];
+			$unpacked = unpack('N', substr($this->data, 0, 4));
+			$this->_kind = $unpacked[1];
 		}
 	
 		return $this->_kind;
@@ -163,24 +163,29 @@ class Result extends Response {
 			$metadata['columns'] = array();
 			
 			if ($flags & self::ROWS_FLAG_GLOBAL_TABLES_SPEC) {
-				$keyspace = $this->read(unpack('n', $this->read(2))[1]);
-				$tableName = $this->read(unpack('n', $this->read(2))[1]);
+				$data_keyspace = unpack('n', $this->read(2));
+				$keyspace = $this->read($data_keyspace[1]);
+				$data_tableName = unpack('n', $this->read(2));
+				$tableName = $this->read($data_tableName[1]);
 
 				for ($i = 0; $i < $metadata['columns_count']; ++$i) {
+					$data_name = unpack('n', $this->read(2));
 					$metadata['columns'][] = array(
 						'keyspace' => $keyspace,
 						'tableName' => $tableName,
-						'name' => $this->read(unpack('n', $this->read(2))[1]),
+						'name' => $this->read($data_name[1]),
 						'type' => self::readType()
 					);
 				}
-			}
-			else {
+			} else {
 				for ($i = 0; $i < $metadata['columns_count']; ++$i) {
+					$data_keyspace = unpack('n', $this->read(2));
+					$data_tableName = unpack('n', $this->read(2));
+					$data_name = unpack('n', $this->read(2));
 					$metadata['columns'][] = array(
-						'keyspace' => $this->read(unpack('n', $this->read(2))[1]),
-						'tableName' => $this->read(unpack('n', $this->read(2))[1]),
-						'name' => $this->read(unpack('n', $this->read(2))[1]),
+						'keyspace' => $this->read($data_keyspace[1]),
+						'tableName' => $this->read($data_tableName[1]),
+						'name' => $this->read($data_name[1]),
 						'type' => self::readType()
 					);
 				}
@@ -281,8 +286,7 @@ class Result extends Response {
 	
 				if ($j === 0){
 					$key = $value;
-				}
-				elseif($j === 1){
+				} elseif($j === 1){
 					$map[$key] = $value;
 				}
 			}

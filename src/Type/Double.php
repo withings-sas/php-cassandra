@@ -4,7 +4,7 @@ namespace Cassandra\Type;
 class Double extends Base{
 	
 	public function __construct($value){
-		if (!is_double($value)) throw new Exception('Incoming value must be of type double.');
+		if (!is_float($value)) throw new Exception('Incoming value must be of type double.');
 	
 		$this->_value = $value;
 	}
