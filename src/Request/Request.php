@@ -136,7 +136,7 @@ class Request implements Frame{
 	 * @return array
 	 */
 	public static function strictTypeValues(array $values, array $columns) {
-		$strictTypeValues = [];
+		$strictTypeValues = array();
 		foreach($columns as $index => $column) {
 			$key = isset($values[$column['name']]) ? $column['name'] : $index;
 			
@@ -161,7 +161,7 @@ class Request implements Frame{
 	 * @param array $options
 	 * @return string
 	 */
-	public static function queryParameters($consistency, array $values = [], array $options = []){
+	public static function queryParameters($consistency, array $values = array(), array $options = array()){
 		$flags = 0;
 		$optional = '';
 		

@@ -37,7 +37,8 @@ trait StreamReader {
 	 * @return int
 	 */
 	public function readChar() {
-		return unpack('C', $this->read(1))[1];
+		$data = unpack('C', $this->read(1));
+		return $data[1];
 	}
 
 	/**
@@ -46,7 +47,8 @@ trait StreamReader {
 	 * @return int
 	 */
 	public function readShort() {
-		return unpack('n', $this->read(2))[1];
+		$data = unpack('n', $this->read(2));
+		return $data[1];
 	}
 
 	/**
@@ -55,7 +57,8 @@ trait StreamReader {
 	 * @return int
 	 */
 	public function readInt() {
-		return unpack('N', $this->read(4))[1];
+		$data = unpack('N', $this->read(4));
+		return $data[1];
 	}
 
 	/**
@@ -64,7 +67,8 @@ trait StreamReader {
 	 * @return string
 	 */
 	public function readString() {
-		$length = unpack('n', $this->read(2))[1];
+		$data = unpack('n', $this->read(2));
+		$length = $data[1];
 		return $this->read($length);
 	}
 
@@ -74,7 +78,8 @@ trait StreamReader {
 	 * @return string
 	 */
 	public function readLongString() {
-		$length = unpack('N', $this->read(4))[1];
+		$data = unpack('N', $this->read(4));
+		$length = $data[1];
 		return $this->read($length);
 	}
 
@@ -84,7 +89,8 @@ trait StreamReader {
 	 * @return string
 	 */
 	public function readBytes() {
-		$length = unpack('N', $this->read(4))[1];
+		$data = unpack('N', $this->read(4));
+		$length = $data[1];
 		if ($length == 4294967295)
 			return null;
 		return $this->read($length);
@@ -116,7 +122,7 @@ trait StreamReader {
 	 * @return array
 	 */
 	public function readList($valueType) {
-		$list = [];
+		$list = array();
 		$count = $this->readInt();
 		for ($i = 0; $i < $count; ++$i) {
 			$list[] = $this->readBytesAndConvertToType($valueType);
@@ -132,7 +138,7 @@ trait StreamReader {
 	 * @return array
 	 */
 	public function readMap($keyType, $valueType) {
-		$map = [];
+		$map = array();
 		$count = $this->readInt();
 		for ($i = 0; $i < $count; ++$i) {
 			$map[$this->readBytesAndConvertToType($keyType)] = $this->readBytesAndConvertToType($valueType);
@@ -199,13 +205,13 @@ trait StreamReader {
 	}
 	
 	public function readStringMultimap(){
-		$map = [];
+		$map = array();
 		$count = $this->readShort();
 		for($i = 0; $i < $count; $i++){
 			$key = $this->readString();
 				
 			$listLength = $this->readShort();
-			$list = [];
+			$list = array();
 			for($j = 0; $j < $listLength; $j++)
 				$list[] = $this->readString();
 					

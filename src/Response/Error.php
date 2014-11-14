@@ -42,11 +42,11 @@ class Error extends Response {
 				return "Bad credentials: " . $this->readString();
 
 			case self::UNAVAILABLE_EXCEPTION:
-				return "Unavailable exception. Error data: " . var_export([
+				return "Unavailable exception. Error data: " . var_export(array(
 						'consistency' => $this->readInt(),
 						'node' => $this->readInt(),
 						'replica' => $this->readInt()
-					], true);
+					), true);
 
 			case self::OVERLOADED:
 				return "Overloaded: " . $this->readString();
@@ -58,20 +58,20 @@ class Error extends Response {
 				return "Truncate_error: " . $this->readString();
 
 			case self::WRITE_TIMEOUT:
-				return "Write_timeout. Error data: " . var_export([
+				return "Write_timeout. Error data: " . var_export(array(
 						'consistency' => $this->readInt(),
 						'node' => $this->readInt(),
 						'replica' => $this->readInt(),
 						'writeType' => $this->readString()
-					], true);
+					), true);
 
 			case self::READ_TIMEOUT:
-				return "Read_timeout. Error data: " . var_export([
+				return "Read_timeout. Error data: " . var_export(array(
 						'consistency' => $this->readInt(),
 						'node' => $this->readInt(),
 						'replica' => $this->readInt(),
 						'dataPresent' => $this->readChar()
-					], true);
+					), true);
 
 			case self::SYNTAX_ERROR:
 				return "Syntax_error: " . $this->readString();

@@ -10,7 +10,7 @@ class Startup extends Request{
 	 * 
 	 * @var array
 	 */
-	protected $_options = [];
+	protected $_options = array();
 	
 	/**
 	 * STARTUP
@@ -33,7 +33,7 @@ class Startup extends Request{
 	 *
 	 * @param array $options
 	 */
-	public function __construct(array $options = []) {
+	public function __construct(array $options = array()) {
 		$this->_options = $options;
 	}
 	

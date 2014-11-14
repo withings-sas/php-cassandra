@@ -11,16 +11,16 @@ class Node {
 	/**
 	 * @var array
 	 */
-	protected $_options = [
+	protected $_options = array(
 		'host'		=> null,
 		'port'		=> 9042,
 		'username'	=> null,
 		'password'	=> null,
-		'socket'	=> [
-			SO_RCVTIMEO => ["sec" => 30, "usec" => 0],
-			SO_SNDTIMEO => ["sec" => 5, "usec" => 0],
-		],
-	];
+		'socket'	=> array(
+			SO_RCVTIMEO => array("sec" => 30, "usec" => 0),
+			SO_SNDTIMEO => array("sec" => 5, "usec" => 0),
+		),
+	);
 
 	/**
 	 * @param string|array $options

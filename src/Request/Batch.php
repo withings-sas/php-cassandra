@@ -14,7 +14,7 @@ class Batch extends Request{
 	/**
 	 * @var array
 	 */
-	protected $_queryArray = [];
+	protected $_queryArray = array();
 
 	/**
 	 * @var int
@@ -39,7 +39,7 @@ class Batch extends Request{
 	 * @param string $consistency
 	 * @param array $options
 	 */
-	public function __construct($type = null, $consistency = null, $options = []) {
+	public function __construct($type = null, $consistency = null, $options = array()) {
 		$this->_batchType = $type === null ? Batch::TYPE_LOGGED : $type;
 		$this->_consistency = $consistency === null ? Request::CONSISTENCY_QUORUM : $consistency;
 		$this->_options = $options;
@@ -52,7 +52,7 @@ class Batch extends Request{
 		$body = pack('C', $this->_batchType);
 		$body .= pack('n', count($this->_queryArray)) . implode('', $this->_queryArray);
 		
-		$body .= Request::queryParameters($this->_consistency, [], $this->_options);
+		$body .= Request::queryParameters($this->_consistency, array(), $this->_options);
 		return $body;
 	}
 
@@ -61,7 +61,7 @@ class Batch extends Request{
 	 * @param array $values
 	 * @return self
 	 */
-	public function appendQuery($cql, array $values = []) {
+	public function appendQuery($cql, array $values = array()) {
 		$binary = pack('C', 0);
 	
 		$binary .= pack('N', strlen($cql)) . $cql;
@@ -78,7 +78,7 @@ class Batch extends Request{
 	 * @param array $values
 	 * @return self
 	 */
-	public function appendQueryId($queryId, array $values = []) {
+	public function appendQueryId($queryId, array $values = array()) {
 		$binary = pack('C', 1);
 		
 		$binary .= pack('n', strlen($queryId)) . $queryId;

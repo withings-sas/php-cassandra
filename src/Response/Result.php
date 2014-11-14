@@ -48,18 +48,18 @@ class Result extends Response {
 				return parent::readString();
 	
 			case self::PREPARED:
-				return [
+				return array(
 					'id' => parent::readString(),
 					'metadata' => $this->_readMetadata(),
 					'result_metadata' => $this->_readMetadata(),
-				];
+				);
 	
 			case self::SCHEMA_CHANGE:
-				return [
+				return array(
 					'change' => parent::readString(),
 					'keyspace' => parent::readString(),
 					'table' => parent::readString()
-				];
+				);
 		}
 	
 		return null;
@@ -69,32 +69,33 @@ class Result extends Response {
 	 * @return int|array
 	 */
 	protected function readType(){
-		$type = unpack('n', $this->read(2))[1];
+		$data = unpack('n', $this->read(2));
+		$type = $data[1];
 		switch ($type) {
 			case Type\Base::CUSTOM:
-				return [
+				return array(
 					'type'	=> $type,
 					'name'	=> self::readString(),
-				];
+				);
 			case Type\Base::COLLECTION_LIST:
 			case Type\Base::COLLECTION_SET:
-				return [
+				return array(
 					'type'	=> $type,
 					'value'	=> self::readType(),
-				];
+				);
 			case Type\Base::COLLECTION_MAP:
-				return [
+				return array(
 					'type'	=> $type,
 					'key'	=> self::readType(),
 					'value'	=> self::readType(),
-				];
+				);
 			case Type\Base::UDT:
-				$data = [
+				$data = array(
 					'type'	=> $type,
 					'keyspace'=>self::readString(),
 					'name'	=> self::readString(),
-					'names'	=>	[],
-				];
+					'names'	=>	array(),
+				);
 				$length = self::readShort();
 				for($i = 0; $i < $length; ++$i){
 					$key = self::readString();
@@ -102,10 +103,10 @@ class Result extends Response {
 				}
 				return $data;
 			case Type\Base::TUPLE:
-				$data = [
+				$data = array(
 					'type'	=> $type,
-					'types'	=>	[],
-				];
+					'types'	=>	array(),
+				);
 				$length = self::readShort();
 				for($i = 0; $i < $length; ++$i){
 					$data['types'][] = self::readType();
@@ -117,8 +118,10 @@ class Result extends Response {
 	}
 
 	public function getKind(){
-		if ($this->_kind === null)
-			$this->_kind = unpack('N', substr($this->data, 0, 4))[1];
+		if ($this->_kind === null) {
+			$data = unpack('N', substr($this->data, 0, 4));
+			$this->_kind = $data[1];
+		}
 	
 		return $this->_kind;
 	}
@@ -157,29 +160,29 @@ class Result extends Response {
 			$metadata['page_state'] = parent::readBytes();
 
 		if (!($flags & self::ROWS_FLAG_NO_METADATA)) {
-			$metadata['columns'] = [];
+			$metadata['columns'] = array();
 			
 			if ($flags & self::ROWS_FLAG_GLOBAL_TABLES_SPEC) {
 				$keyspace = $this->read(unpack('n', $this->read(2))[1]);
 				$tableName = $this->read(unpack('n', $this->read(2))[1]);
 
 				for ($i = 0; $i < $metadata['columns_count']; ++$i) {
-					$metadata['columns'][] = [
+					$metadata['columns'][] = array(
 						'keyspace' => $keyspace,
 						'tableName' => $tableName,
 						'name' => $this->read(unpack('n', $this->read(2))[1]),
 						'type' => self::readType()
-					];
+					);
 				}
 			}
 			else {
 				for ($i = 0; $i < $metadata['columns_count']; ++$i) {
-					$metadata['columns'][] = [
+					$metadata['columns'][] = array(
 						'keyspace' => $this->read(unpack('n', $this->read(2))[1]),
 						'tableName' => $this->read(unpack('n', $this->read(2))[1]),
 						'name' => $this->read(unpack('n', $this->read(2))[1]),
 						'type' => self::readType()
-					];
+					);
 				}
 			}
 		}
@@ -210,7 +213,7 @@ class Result extends Response {
 			$rowClass = $this->_rowClass;
 	
 		for ($i = 0; $i < $rowCount; ++$i) {
-			$data = [];
+			$data = array();
 	
 			foreach ($this->_metadata['columns'] as $column)
 				$data[$column['name']] = $this->readBytesAndConvertToType($column['type']);
@@ -270,7 +273,7 @@ class Result extends Response {
 	
 		$rowCount = parent::readInt();
 	
-		$map = [];
+		$map = array();
 	
 		for($i = 0; $i < $rowCount; ++$i){
 			foreach($this->_metadata['columns'] as $j => $column){
@@ -312,7 +315,7 @@ class Result extends Response {
 		if ($rowClass === null)
 			$rowClass = $this->_rowClass;
 		
-		$data = [];
+		$data = array();
 		foreach ($this->_metadata['columns'] as $column)
 			$data[$column['name']] = $this->readBytesAndConvertToType($column['type']);
 	

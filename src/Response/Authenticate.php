@@ -4,6 +4,7 @@ use Cassandra\Protocol\Frame;
 
 class Authenticate extends Response {
 	public function getData(){
-		return unpack('n', $this->data)[1];
+		$data = unpack('n', $this->data);
+		return $data[1];
 	}
 }

@@ -8,9 +8,9 @@ class Connection {
 	 * Connection options
 	 * @var array
 	 */
-	protected $options = [
+	protected $options = array(
 		'CQL_VERSION' => '3.0.0'
-	];
+	);
 
 	/**
 	 * @var string
@@ -41,7 +41,7 @@ class Connection {
 	 * 
 	 * @var array
 	 */
-	protected $_statements = [];
+	protected $_statements = array();
 	
 	/**
 	 * 
@@ -54,7 +54,7 @@ class Connection {
 	 * @param string $keyspace
 	 * @param array $options
 	 */
-	public function __construct($nodes, $keyspace = '', array $options = []) {
+	public function __construct($nodes, $keyspace = '', array $options = array()) {
 		if (is_array($nodes))
 			shuffle($nodes);
 		
@@ -155,7 +155,7 @@ class Connection {
 			$body = '';
 		}
 		
-		static $responseClassMap = [
+		static $responseClassMap = array(
 			Frame::OPCODE_ERROR			=> 'Cassandra\Response\Error',
 			Frame::OPCODE_READY			=> 'Cassandra\Response\Ready',
 			Frame::OPCODE_AUTHENTICATE	=> 'Cassandra\Response\Authenticate',
@@ -163,7 +163,7 @@ class Connection {
 			Frame::OPCODE_RESULT		=> 'Cassandra\Response\Result',
 			Frame::OPCODE_EVENT			=> 'Cassandra\Response\Event',
 			Frame::OPCODE_AUTH_SUCCESS	=> 'Cassandra\Response\AuthSuccess',
-		];
+		);
 		
 		if (!isset($responseClassMap[$header['opcode']]))
 			throw new Response\Exception('Unknown response');
@@ -297,7 +297,7 @@ class Connection {
 	 * @throws Exception
 	 * @return Response\Response
 	 */
-	public function executeSync($queryId, array $values = [], $consistency = null, array $options = []){
+	public function executeSync($queryId, array $values = array(), $consistency = null, array $options = array()){
 		$request = new Request\Execute($queryId, $values, $consistency, $options);
 		
 		return $this->syncRequest($request);
@@ -312,7 +312,7 @@ class Connection {
 	 * @throws Exception
 	 * @return Statement
 	 */
-	public function executeAsync($queryId, array $values = [], $consistency = null, array $options = []){
+	public function executeAsync($queryId, array $values = array(), $consistency = null, array $options = array()){
 		$request = new Request\Execute($queryId, $values, $consistency, $options);
 		
 		return $this->asyncRequest($request);
@@ -327,7 +327,7 @@ class Connection {
 	 * @throws Exception
 	 * @return Response\Response
 	 */
-	public function querySync($cql, array $values = [], $consistency = null, array $options = []){
+	public function querySync($cql, array $values = array(), $consistency = null, array $options = array()){
 		$request = new Request\Query($cql, $values, $consistency, $options);
 		
 		return $this->syncRequest($request);
@@ -342,7 +342,7 @@ class Connection {
 	 * @throws Exception
 	 * @return Statement
 	 */
-	public function queryAsync($cql, array $values = [], $consistency = null, array $options = []){
+	public function queryAsync($cql, array $values = array(), $consistency = null, array $options = array()){
 		$request = new Request\Query($cql, $values, $consistency, $options);
 		
 		return $this->asyncRequest($request);
