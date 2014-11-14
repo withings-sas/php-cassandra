@@ -9,6 +9,7 @@ Cassandra client library for PHP, which support Protocol v3 (Cassandra 2.1) and 
 
 ## Features
 * Support for PHP 5.3
+* composer is *not* required
 * Using Protocol v3 (Cassandra 2.1)
 * Support asynchronous and synchronous request
 * Support for logged, unlogged and counter batches
@@ -21,18 +22,8 @@ Cassandra client library for PHP, which support Protocol v3 (Cassandra 2.1) and 
 
 ## Installation
 
-PHP 5.4+ is required. There is no need for additional libraries.
+PHP 5.3+ is required. There is no need for additional libraries.
 
-Append dependency into composer.json
-
-```
-	...
-	"require": {
-		...
-		"duoshuo/php-cassandra": "dev-master"
-	}
-	...
-```
 
 ## Basic Using
 
@@ -52,6 +43,9 @@ $nodes = [
 		],
 	],
 ];
+
+require_once "Autoloader.php";
+Cassandra\Autoloader::register();
 
 // Create a connection.
 $connection = new Cassandra\Connection($nodes, 'my_keyspace');
