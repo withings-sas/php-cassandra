@@ -8,6 +8,7 @@ Cassandra client library for PHP
 Cassandra client library for PHP, which support Protocol v3 (Cassandra 2.1) and asynchronous request 
 
 ## Features
+* Support for PHP 5.3
 * Using Protocol v3 (Cassandra 2.1)
 * Support asynchronous and synchronous request
 * Support for logged, unlogged and counter batches
